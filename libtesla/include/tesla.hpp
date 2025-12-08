@@ -2877,25 +2877,6 @@ namespace tsl {
              * @param screenH Target screen height
              */
 
-            //inline void drawBitmapRGBA4444(const s32 x, const s32 y, const s32 screenW, const s32 screenH, const u8 *preprocessedData) {
-            //    s32 startRow;
-            //
-            //    // Divide rows among ult::renderThreads
-            //    //s32 chunkSize = (screenH + ult::numThreads - 1) / ult::numThreads;
-            //    for (unsigned i = 0; i < ult::numThreads; ++i) {
-            //        startRow = i * ult::bmpChunkSize;
-            //        //s32 endRow = std::min(startRow + ult::bmpChunkSize, screenH);
-            //
-            //        // Bind the member function and create the thread
-            //        ult::renderThreads[i] = std::thread(std::bind(&tsl::gfx::Renderer::processBMPChunk, this, x, y, screenW, preprocessedData, startRow, std::min(startRow + ult::bmpChunkSize, screenH)));
-            //    }
-            //
-            //    // Join all ult::renderThreads
-            //    for (auto& t : ult::renderThreads) {
-            //        t.join();
-            //    }
-            //}
-
             inline void drawBitmapRGBA4444(const s32 x, const s32 y, const s32 screenW, const s32 screenH,
                                            const u8 *preprocessedData, float opacity = 1.0f) {
                 // Pre-compute alpha limit once
@@ -2917,24 +2898,6 @@ namespace tsl {
                     t.join();
                 }
             }
-
-
-
-            //inline void drawWallpaper() {
-            //    if (!ult::expandedMemory || ult::refreshWallpaper.load(std::memory_order_acquire)) {
-            //        return;
-            //    }
-            //
-            //    ult::inPlot.store(true, std::memory_order_release);
-            //
-            //    if (!ult::wallpaperData.empty() &&
-            //        !ult::refreshWallpaper.load(std::memory_order_acquire) &&
-            //        ult::correctFrameSize) {
-            //        drawBitmapRGBA4444(0, 0, cfg::FramebufferWidth, cfg::FramebufferHeight, ult::wallpaperData.data());
-            //    }
-            //
-            //    ult::inPlot.store(false, std::memory_order_release);
-            //}
 
             inline void drawWallpaper() {
                 if (!ult::expandedMemory || ult::refreshWallpaper.load(std::memory_order_acquire)) {
@@ -4909,28 +4872,28 @@ namespace tsl {
 
         #endif
 
-        struct TopCache {
-            std::string title;
-            std::string subtitle;
-            tsl::Color titleColor{0xF, 0xF, 0xF, 0xF}; // white by default
-            bool widgetDrawn = false;
-            bool useDynamicLogo = false;
-            bool disabled = false;
-        };
-
-        struct BottomCache {
-            std::string bottomText;
-            float backWidth = 0.0f;
-            float selectWidth = 0.0f;
-            float nextPageWidth = 0.0f;
-            bool disabled = false;
-        };
-
-        // Global or namespace-level variable
-        inline TopCache g_cachedTop;
-        inline BottomCache g_cachedBottom;
-
-        inline std::atomic<bool> g_disableMenuCacheOnReturn = false;
+       //struct TopCache {
+       //    std::string title;
+       //    std::string subtitle;
+       //    tsl::Color titleColor{0xF, 0xF, 0xF, 0xF}; // white by default
+       //    bool widgetDrawn = false;
+       //    bool useDynamicLogo = false;
+       //    bool disabled = false;
+       //};
+       //
+       //struct BottomCache {
+       //    std::string bottomText;
+       //    float backWidth = 0.0f;
+       //    float selectWidth = 0.0f;
+       //    float nextPageWidth = 0.0f;
+       //    bool disabled = false;
+       //};
+       //
+       //// Global or namespace-level variable
+       //inline TopCache g_cachedTop;
+       //inline BottomCache g_cachedBottom;
+       //
+       //inline std::atomic<bool> g_disableMenuCacheOnReturn = false;
 
         /**
          * @brief The base frame which can contain another view
@@ -4985,10 +4948,10 @@ namespace tsl {
                 delete m_contentElement;
 
                 // Check if returning from a list that disabled caching
-                if (g_disableMenuCacheOnReturn.exchange(false, std::memory_order_acq_rel)) {
-                    g_cachedTop.disabled = true;
-                    g_cachedBottom.disabled = true;
-                }
+                //if (g_disableMenuCacheOnReturn.exchange(false, std::memory_order_acq_rel)) {
+                //    g_cachedTop.disabled = true;
+                //    g_cachedBottom.disabled = true;
+                //}
             }
 
         #if USING_FPS_INDICATOR_DIRECTIVE
@@ -5031,35 +4994,36 @@ namespace tsl {
                     ult::noClickableItems.store(m_noClickableItems, std::memory_order_release);
                 }
 
-                const bool isUltrahandMenu = (m_title == ult::CAPITAL_ULTRAHAND_PROJECT_NAME &&
-                                        m_subtitle.find("Ultrahand Package") == std::string::npos &&
-                                        m_subtitle.find("Ultrahand Script") == std::string::npos);
+                //const bool isUltrahandMenu = (m_title == ult::CAPITAL_ULTRAHAND_PROJECT_NAME &&
+                //                        m_subtitle.find("Ultrahand Package") == std::string::npos &&
+                //                        m_subtitle.find("Ultrahand Script") == std::string::npos);
 
                 // Determine if we should use cached data (first frame of new overlay)
-                const bool useCachedTop = !g_cachedTop.disabled &&
-                                          !g_cachedTop.title.empty() &&
-                                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
+                //const bool useCachedTop = !g_cachedTop.disabled &&
+                //                          !g_cachedTop.title.empty() &&
+                //                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
 
                 // Use cached or current data for rendering
-                const std::string& renderTitle = useCachedTop ? g_cachedTop.title : m_title;
-                const std::string& renderSubtitle = useCachedTop ? g_cachedTop.subtitle : m_subtitle;
-                const tsl::Color& renderTitleColor = useCachedTop ? g_cachedTop.titleColor : titleColor;
-                const bool renderUseDynamicLogo = useCachedTop ? g_cachedTop.useDynamicLogo : ult::useDynamicLogo;
+                const std::string& renderTitle = m_title;
+                const std::string& renderSubtitle = m_subtitle;
+                //const tsl::Color& renderTitleColor = titleColor;
+                const bool renderUseDynamicLogo = ult::useDynamicLogo;
 
                 const bool renderIsUltrahandMenu = (renderTitle == ult::CAPITAL_ULTRAHAND_PROJECT_NAME &&
                                                      renderSubtitle.find("Ultrahand Package") == std::string::npos &&
                                                      renderSubtitle.find("Ultrahand Script") == std::string::npos);
 
                 if (renderIsUltrahandMenu) {
-            #if USING_WIDGET_DIRECTIVE
-                    if (useCachedTop) {
-                        if (g_cachedTop.widgetDrawn) {
-                            renderer->drawWidget();
-                        }
-                    } else {
-                        renderer->drawWidget();
-                    }
-            #endif
+                #if USING_WIDGET_DIRECTIVE
+                    //if (useCachedTop) {
+                    //    if (g_cachedTop.widgetDrawn) {
+                    //        renderer->drawWidget();
+                    //    }
+                    //} else {
+                    //    renderer->drawWidget();
+                    //}
+                    renderer->drawWidget();
+                #endif
 
                     if (ult::touchingMenu.load(std::memory_order_acquire) && (ult::inMainMenu.load(std::memory_order_acquire) ||
                         (ult::inHiddenMode.load(std::memory_order_acquire) && !ult::inSettingsMenu.load(std::memory_order_acquire) && !ult::inSubSettingsMenu.load(std::memory_order_acquire)))) {
@@ -5082,14 +5046,17 @@ namespace tsl {
                     renderer->drawString(ult::SPLIT_PROJECT_NAME_2, false, x, y + offset, fontSize, logoColor2);
 
                 } else {
-                    if (useCachedTop) {
-                        if (g_cachedTop.widgetDrawn) {
-                            renderer->drawWidget();
-                        }
-                    } else {
-                        if (m_showWidget) {
-                            renderer->drawWidget();
-                        }
+                    //if (useCachedTop) {
+                    //    if (g_cachedTop.widgetDrawn) {
+                    //        renderer->drawWidget();
+                    //    }
+                    //} else {
+                    //    if (m_showWidget) {
+                    //        renderer->drawWidget();
+                    //    }
+                    //}
+                    if (m_showWidget) {
+                        renderer->drawWidget();
                     }
 
                     x = 20;
@@ -5101,65 +5068,60 @@ namespace tsl {
                     } else {
                         tsl::Color drawColor = defaultPackageColor; // Default to green
 
-                        if (!useCachedTop) {
-                            // Calculate color only if not using cache
-                            if (!m_colorSelection.empty()) {
-                                const char firstChar = m_colorSelection[0];
-                                const size_t len = m_colorSelection.length();
+                        // Calculate color only if not using cache
+                        if (!m_colorSelection.empty()) {
+                            const char firstChar = m_colorSelection[0];
+                            const size_t len = m_colorSelection.length();
 
-                                // Fast path: check first char + length for unique combinations
-                                switch (firstChar) {
-                                    case 'g': // green
-                                        if (len == 5 && m_colorSelection.compare("green") == 0) {
-                                            drawColor = {0x0, 0xF, 0x0, 0xF};
-                                        }
-                                        break;
-                                    case 'r': // red
-                                        if (len == 3 && m_colorSelection.compare("red") == 0) {
-                                            //drawColor = RGB888("#F7253E");
-                                            drawColor = {0xF, 0x2, 0x4, 0xF};
-                                        }
-                                        break;
-                                    case 'b': // blue
-                                        if (len == 4 && m_colorSelection.compare("blue") == 0) {
-                                            drawColor = {0x7, 0x7, 0xF, 0xF};
-                                        }
-                                        break;
-                                    case 'y': // yellow
-                                        if (len == 6 && m_colorSelection.compare("yellow") == 0) {
-                                            drawColor = {0xF, 0xF, 0x0, 0xF};
-                                        }
-                                        break;
-                                    case 'o': // orange
-                                        if (len == 6 && m_colorSelection.compare("orange") == 0) {
-                                            //drawColor = {0xFF, 0xA5, 0x00, 0xFF};
-                                            drawColor = {0xF, 0xA, 0x0, 0xF};
-                                        }
-                                        break;
-                                    case 'p': // pink or purple
-                                        if (len == 4 && m_colorSelection.compare("pink") == 0) {
-                                            //drawColor = {0xFF, 0x69, 0xB4, 0xFF};
-                                            drawColor = {0xF, 0x6, 0xB, 0xF};
-                                        } else if (len == 6 && m_colorSelection.compare("purple") == 0) {
-                                            //drawColor = {0x80, 0x00, 0x80, 0xFF};
-                                            drawColor = {0x8, 0x0, 0x8, 0xF};
-                                        }
-                                        break;
-                                    case 'w': // white
-                                        if (len == 5 && m_colorSelection.compare("white") == 0) {
-                                            drawColor = {0xF, 0xF, 0xF, 0xF};
-                                        }
-                                        break;
-                                    case '#': // hex color
-                                        if (len == 7 && ult::isValidHexColor(m_colorSelection.substr(1))) {
-                                            drawColor = RGB888(m_colorSelection.substr(1));
-                                        }
-                                        break;
-                                }
+                            // Fast path: check first char + length for unique combinations
+                            switch (firstChar) {
+                                case 'g': // green
+                                    if (len == 5 && m_colorSelection.compare("green") == 0) {
+                                        drawColor = {0x0, 0xF, 0x0, 0xF};
+                                    }
+                                    break;
+                                case 'r': // red
+                                    if (len == 3 && m_colorSelection.compare("red") == 0) {
+                                        //drawColor = RGB888("#F7253E");
+                                        drawColor = {0xF, 0x2, 0x4, 0xF};
+                                    }
+                                    break;
+                                case 'b': // blue
+                                    if (len == 4 && m_colorSelection.compare("blue") == 0) {
+                                        drawColor = {0x7, 0x7, 0xF, 0xF};
+                                    }
+                                    break;
+                                case 'y': // yellow
+                                    if (len == 6 && m_colorSelection.compare("yellow") == 0) {
+                                        drawColor = {0xF, 0xF, 0x0, 0xF};
+                                    }
+                                    break;
+                                case 'o': // orange
+                                    if (len == 6 && m_colorSelection.compare("orange") == 0) {
+                                        //drawColor = {0xFF, 0xA5, 0x00, 0xFF};
+                                        drawColor = {0xF, 0xA, 0x0, 0xF};
+                                    }
+                                    break;
+                                case 'p': // pink or purple
+                                    if (len == 4 && m_colorSelection.compare("pink") == 0) {
+                                        //drawColor = {0xFF, 0x69, 0xB4, 0xFF};
+                                        drawColor = {0xF, 0x6, 0xB, 0xF};
+                                    } else if (len == 6 && m_colorSelection.compare("purple") == 0) {
+                                        //drawColor = {0x80, 0x00, 0x80, 0xFF};
+                                        drawColor = {0x8, 0x0, 0x8, 0xF};
+                                    }
+                                    break;
+                                case 'w': // white
+                                    if (len == 5 && m_colorSelection.compare("white") == 0) {
+                                        drawColor = {0xF, 0xF, 0xF, 0xF};
+                                    }
+                                    break;
+                                case '#': // hex color
+                                    if (len == 7 && ult::isValidHexColor(m_colorSelection.substr(1))) {
+                                        drawColor = RGB888(m_colorSelection.substr(1));
+                                    }
+                                    break;
                             }
-                            titleColor = drawColor;
-                        } else {
-                            drawColor = renderTitleColor;
                         }
 
                         renderer->drawString(renderTitle, false, x, y, fontSize, drawColor);
@@ -5180,17 +5142,17 @@ namespace tsl {
                 }
 
                 // Update top cache after rendering for next frame
-                g_cachedTop.title = m_title;
-                g_cachedTop.subtitle = m_subtitle;
-                g_cachedTop.titleColor = titleColor;
-                g_cachedTop.useDynamicLogo = ult::useDynamicLogo;
-                // Store whether widget was ACTUALLY drawn this frame
-                if (isUltrahandMenu) {
-                    g_cachedTop.widgetDrawn = true;  // Ultrahand menu always shows widget
-                } else {
-                    g_cachedTop.widgetDrawn = m_showWidget;  // Other menus use m_showWidget
-                }
-                g_cachedTop.disabled = false;
+                //g_cachedTop.title = m_title;
+                //g_cachedTop.subtitle = m_subtitle;
+                //g_cachedTop.titleColor = titleColor;
+                //g_cachedTop.useDynamicLogo = ult::useDynamicLogo;
+                //// Store whether widget was ACTUALLY drawn this frame
+                //if (isUltrahandMenu) {
+                //    g_cachedTop.widgetDrawn = true;  // Ultrahand menu always shows widget
+                //} else {
+                //    g_cachedTop.widgetDrawn = m_showWidget;  // Other menus use m_showWidget
+                //}
+                //g_cachedTop.disabled = false;
 
             #else
                 // NON-LAUNCHER PATH WITH CACHE SUPPORT
@@ -5199,39 +5161,41 @@ namespace tsl {
                 }
 
                 // Determine if we should use cached data (first frame of new overlay)
-                const bool useCachedTop = !g_cachedTop.disabled &&
-                                          !g_cachedTop.title.empty() &&
-                                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
+                //const bool useCachedTop = !g_cachedTop.disabled &&
+                //                          !g_cachedTop.title.empty() &&
+                //                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
 
                 // Use cached or current data for rendering
-                const std::string& renderTitle = useCachedTop ? g_cachedTop.title : m_title;
-                const std::string& renderSubtitle = useCachedTop ? g_cachedTop.subtitle : m_subtitle;
+                const std::string& renderTitle = m_title;
+                const std::string& renderSubtitle = m_subtitle;
 
-            #if USING_WIDGET_DIRECTIVE
-                if (useCachedTop) {
-                    if (g_cachedTop.widgetDrawn) {
-                        renderer->drawWidget();
-                    }
-                } else {
-                    if (m_showWidget)
-                        renderer->drawWidget();
-                }
-            #endif
+                #if USING_WIDGET_DIRECTIVE
+                //if (useCachedTop) {
+                //    if (g_cachedTop.widgetDrawn) {
+                //        renderer->drawWidget();
+                //    }
+                //} else {
+                //    if (m_showWidget)
+                //        renderer->drawWidget();
+                //}
+                if (m_showWidget)
+                    renderer->drawWidget();
+                #endif
 
                 renderer->drawString(renderTitle, false, 20, 52-2, 32, defaultOverlayColor);
                 renderer->drawString(renderSubtitle, false, 20, y+2+23, 15, bannerVersionTextColor);
 
                 // Update top cache after rendering for next frame
-                g_cachedTop.title = m_title;
-                g_cachedTop.subtitle = m_subtitle;
-                g_cachedTop.titleColor = {0xF, 0xF, 0xF, 0xF};
-            #if USING_WIDGET_DIRECTIVE
-                g_cachedTop.widgetDrawn = m_showWidget;
-            #else
-                g_cachedTop.widgetDrawn = false;
-            #endif
-                g_cachedTop.useDynamicLogo = false;
-                g_cachedTop.disabled = false;
+            //    g_cachedTop.title = m_title;
+            //    g_cachedTop.subtitle = m_subtitle;
+            //    g_cachedTop.titleColor = {0xF, 0xF, 0xF, 0xF};
+            //#if USING_WIDGET_DIRECTIVE
+            //    g_cachedTop.widgetDrawn = m_showWidget;
+            //#else
+            //    g_cachedTop.widgetDrawn = false;
+            //#endif
+            //    g_cachedTop.useDynamicLogo = false;
+            //    g_cachedTop.disabled = false;
             #endif
 
                 renderer->drawRect(15, tsl::cfg::FramebufferHeight - 73, tsl::cfg::FramebufferWidth - 30, 1, a(bottomSeparatorColor));
@@ -5349,11 +5313,11 @@ namespace tsl {
             #endif
 
                 // Determine if we should use cached bottom text (first frame of new overlay)
-                const bool useCachedBottom = !g_cachedBottom.disabled &&
-                                              !g_cachedBottom.bottomText.empty() &&
-                                              g_cachedBottom.bottomText != currentBottomLine;
+                //const bool useCachedBottom = !g_cachedBottom.disabled &&
+                //                              !g_cachedBottom.bottomText.empty() &&
+                //                              g_cachedBottom.bottomText != currentBottomLine;
 
-                const std::string& menuBottomLine = useCachedBottom ? g_cachedBottom.bottomText : currentBottomLine;
+                const std::string& menuBottomLine = currentBottomLine;
 
                 // Render the text - it starts halfGap inside the first button, so edgePadding + halfGap
                 static const std::vector<std::string> specialChars = {"\uE0E1","\uE0E0","\uE0ED","\uE0EE","\uE0E5"};
@@ -5362,15 +5326,15 @@ namespace tsl {
                                                         (bottomTextColor), (buttonColor));
 
                 // Update bottom cache after rendering for next frame
-                g_cachedBottom.bottomText = currentBottomLine;
-                g_cachedBottom.backWidth = _backWidth;
-                g_cachedBottom.selectWidth = _selectWidth;
-            #if IS_LAUNCHER_DIRECTIVE
-                g_cachedBottom.nextPageWidth = ult::nextPageWidth.load(std::memory_order_acquire);
-            #else
-                g_cachedBottom.nextPageWidth = 0.0f;
-            #endif
-                g_cachedBottom.disabled = false;
+            //    g_cachedBottom.bottomText = currentBottomLine;
+            //    g_cachedBottom.backWidth = _backWidth;
+            //    g_cachedBottom.selectWidth = _selectWidth;
+            //#if IS_LAUNCHER_DIRECTIVE
+            //    g_cachedBottom.nextPageWidth = ult::nextPageWidth.load(std::memory_order_acquire);
+            //#else
+            //    g_cachedBottom.nextPageWidth = 0.0f;
+            //#endif
+            //    g_cachedBottom.disabled = false;
 
             #if USING_FPS_INDICATOR_DIRECTIVE
                 // Update and display FPS
@@ -5498,10 +5462,10 @@ namespace tsl {
                     delete this->m_contentElement;
 
                 // Check if returning from a list that disabled caching
-                if (g_disableMenuCacheOnReturn.exchange(false, std::memory_order_acq_rel)) {
-                    g_cachedTop.disabled = true;
-                    g_cachedBottom.disabled = true;
-                }
+                //if (g_disableMenuCacheOnReturn.exchange(false, std::memory_order_acq_rel)) {
+                //    g_cachedTop.disabled = true;
+                //    g_cachedBottom.disabled = true;
+                //}
             }
 
 
@@ -5528,13 +5492,13 @@ namespace tsl {
                 offset = 0;
 
                 // Determine if we should use cached data (first frame of new overlay)
-                const bool useCachedTop = !g_cachedTop.disabled &&
-                                          !g_cachedTop.title.empty() &&
-                                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
+                //const bool useCachedTop = !g_cachedTop.disabled &&
+                //                          !g_cachedTop.title.empty() &&
+                //                          (g_cachedTop.title != m_title || g_cachedTop.subtitle != m_subtitle);
 
                 // Use cached or current data for rendering
-                const std::string& renderTitle = useCachedTop ? g_cachedTop.title : m_title;
-                const std::string& renderSubtitle = useCachedTop ? g_cachedTop.subtitle : m_subtitle;
+                const std::string& renderTitle = m_title;
+                const std::string& renderSubtitle = m_subtitle;
 
                 renderer->drawString(renderTitle, false, 20, 50, 32, defaultOverlayColor);
                 renderer->drawString(renderSubtitle, false, 20, y+2+23, 15, bannerVersionTextColor);
@@ -5586,11 +5550,11 @@ namespace tsl {
                         : "");
 
                 // Determine if we should use cached bottom text (first frame of new overlay)
-                const bool useCachedBottom = !g_cachedBottom.disabled &&
-                                              !g_cachedBottom.bottomText.empty() &&
-                                              g_cachedBottom.bottomText != currentBottomLine;
+                //const bool useCachedBottom = !g_cachedBottom.disabled &&
+                //                              !g_cachedBottom.bottomText.empty() &&
+                //                              g_cachedBottom.bottomText != currentBottomLine;
 
-                const std::string& menuBottomLine = useCachedBottom ? g_cachedBottom.bottomText : currentBottomLine;
+                const std::string& menuBottomLine = currentBottomLine;
 
                 // Render the text with special character handling
                 if (!deactivateOriginalFooter)  {
@@ -5609,19 +5573,19 @@ namespace tsl {
                 }
 
                 // Update top cache after rendering for next frame
-                g_cachedTop.title = m_title;
-                g_cachedTop.subtitle = m_subtitle;
-                g_cachedTop.titleColor = {0xF, 0xF, 0xF, 0xF}; // HeaderOverlayFrame uses default white
-                g_cachedTop.widgetDrawn = false;  // HeaderOverlayFrame doesn't use widgets
-                g_cachedTop.useDynamicLogo = false; // HeaderOverlayFrame doesn't use dynamic logo
-                g_cachedTop.disabled = false;
+                //g_cachedTop.title = m_title;
+                //g_cachedTop.subtitle = m_subtitle;
+                //g_cachedTop.titleColor = {0xF, 0xF, 0xF, 0xF}; // HeaderOverlayFrame uses default white
+                //g_cachedTop.widgetDrawn = false;  // HeaderOverlayFrame doesn't use widgets
+                //g_cachedTop.useDynamicLogo = false; // HeaderOverlayFrame doesn't use dynamic logo
+                //g_cachedTop.disabled = false;
 
                 // Update bottom cache after rendering for next frame
-                g_cachedBottom.bottomText = currentBottomLine;
-                g_cachedBottom.backWidth = ult::backWidth.load(std::memory_order_acquire);
-                g_cachedBottom.selectWidth = ult::selectWidth.load(std::memory_order_acquire);
-                g_cachedBottom.nextPageWidth = 0.0f;  // HeaderOverlayFrame doesn't use next page
-                g_cachedBottom.disabled = false;
+                //g_cachedBottom.bottomText = currentBottomLine;
+                //g_cachedBottom.backWidth = ult::backWidth.load(std::memory_order_acquire);
+                //g_cachedBottom.selectWidth = ult::selectWidth.load(std::memory_order_acquire);
+                //g_cachedBottom.nextPageWidth = 0.0f;  // HeaderOverlayFrame doesn't use next page
+                //g_cachedBottom.disabled = false;
             }
 
 
@@ -5888,56 +5852,27 @@ namespace tsl {
 
         class ListItem; // forward declaration
 
-        static std::mutex s_lastFrameItemsMutex;
-        static std::vector<Element*> s_lastFrameItems;
-        static std::atomic<bool> s_isForwardCache(false); // NEW VARIABLE FOR FORWARD CACHING
-        static std::atomic<bool> s_hasValidFrame(false);
-        static std::atomic<s32> s_cachedTopBound{0};
-        static std::atomic<s32> s_cachedBottomBound{0};
-        static std::atomic<s32> s_cachedHeight{0};
-        static std::atomic<s32> s_cachedListHeight{0};
-        static std::atomic<s32> s_cachedActualContentBottom{0};
-        static std::atomic<bool> s_shouldDrawScrollbar(false);
-        static std::atomic<u32> s_cachedScrollbarHeight{0};
-        static std::atomic<u32> s_cachedScrollbarOffset{0};
-        static std::atomic<u32> s_cachedScrollbarX{0};
-        static std::atomic<u32> s_cachedScrollbarY{0};
         static std::atomic<float> s_currentScrollVelocity{0};
-
         static std::atomic<bool> s_directionalKeyReleased{false};
-        static std::atomic<bool> s_cacheForwardFrameOnce(true);
         static std::atomic<bool> lastInternalTouchRelease(true);
-        static std::atomic<bool> s_hasClearedCache(false);
-
-        //static std::atomic<bool> s_skipCaching(false);
 
         static std::mutex s_safeToSwapMutex;
-        //static std::mutex s_safeTransitionMutex;
         static std::atomic<bool> s_safeToSwap{false};
-
-        static std::atomic<bool> fullDeconstruction{false};
-        static std::atomic<bool> skipDeconstruction{false};
         static std::atomic<bool> skipOnce{false};
 
         static std::atomic<bool> isTableScrolling{false};
+        static bool s_triggerShakeOnce;
 
         class List : public Element {
 
         public:
             List() : Element() {
-                if (fullDeconstruction.load(std::memory_order_acquire)) {
-                    return;
-                }
 
                 s_safeToSwap.store(false, std::memory_order_release);
-                //s_directionalKeyReleased.store(false, std::memory_order_release);
-                //std::lock_guard<std::mutex> lock(s_safeTransitionMutex);
-                //s_safeToSwap.store(false, std::memory_order_release);
 
                 // Initialize instance state
-                m_hasForwardCached = false;
                 m_pendingJump = false;
-                m_cachingDisabled = false;
+                //m_cachingDisabled = false;
                 m_clearList = false;
                 m_focusedIndex = 0;
                 m_offset = 0;
@@ -5946,224 +5881,197 @@ namespace tsl {
                 actualItemCount = 0;
                 m_isItem = false;
                 m_hasSetInitialFocusHack = false;
-
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-
-                    s_hasClearedCache.store(false, std::memory_order_release);
-
-                    if (skipDeconstruction.load(std::memory_order_acquire)) {
-                        purgePendingItems();
-                    } else {
-                        s_cacheForwardFrameOnce.store(true, std::memory_order_release);
-                        skipOnce.store(false, std::memory_order_release);
-                    }
-                }
+                m_hasRenderedInitialFocus = false;
             }
 
             virtual ~List() {
-                if (fullDeconstruction.load(std::memory_order_acquire)) {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);  // Add this
-
-                    purgePendingItems();
-
-                    if (s_isForwardCache.load(std::memory_order_acquire)) {
-                        clearStaticCacheUnsafe(true);
-                        s_isForwardCache.store(false, std::memory_order_release);
-                    } else {
-                        clearStaticCacheUnsafe();
-                    }
-                    clearItems();
-
-                    return;
-                }
-
                 s_safeToSwap.store(false, std::memory_order_release);
-                //s_directionalKeyReleased.store(false, std::memory_order_release);
-                //std::lock_guard<std::mutex> lock(s_safeTransitionMutex);
-                //s_safeToSwap.store(false, std::memory_order_release);
-
-                // NOW take mutex for shared static variable operations
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-
-                    if (!skipDeconstruction.load(std::memory_order_acquire)) {
-                        purgePendingItems();
-
-                        if (!s_isForwardCache.load(std::memory_order_acquire)) {
-                            clearStaticCacheUnsafe();
-                            clearItems();
-                        }
-
-                        s_isForwardCache.store(false, std::memory_order_release);
-                        s_cacheForwardFrameOnce.store(true, std::memory_order_release);
-                    }
-
-                    if (m_cachingDisabled || (skipOnce.load(std::memory_order_acquire) && skipDeconstruction.load(std::memory_order_acquire))) {
-                        purgePendingItems();
-                        clearItems();
-                    } else if (skipDeconstruction.load(std::memory_order_acquire)) {
-                        skipOnce.store(true, std::memory_order_release);
-                    }
-                }
+                purgePendingItems();
+                clearItems();
             }
 
 
             virtual void draw(gfx::Renderer* renderer) override {
-                if (fullDeconstruction.load(std::memory_order_acquire)) {
-                    return;
-                }
 
                 s_safeToSwap.store(false, std::memory_order_release);
                 std::lock_guard<std::mutex> lock(s_safeToSwapMutex);
-                //s_safeToSwap.store(false, std::memory_order_release);
 
-                // Early exit optimizations
                 if (m_clearList) {
-                    if (!s_isForwardCache.load(std::memory_order_acquire)) {
-                        clearStaticCacheUnsafe();
-
-                    } else {
-                        clearStaticCacheUnsafe(true);
-                    }
                     clearItems();
-                    s_isForwardCache.store(false, std::memory_order_release);
-                    s_cacheForwardFrameOnce.store(true, std::memory_order_release);
-                    return;
-                }
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                    // Process pending operations in batch
-                    if (!m_itemsToAdd.empty()) addPendingItems();
-                    if (!m_itemsToRemove.empty()) removePendingItems();
-                }
-
-                // Only lock when checking s_lastFrameItems.empty()
-                bool shouldResetCache = false;
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                    if (!s_hasValidFrame.load(std::memory_order_acquire) && s_lastFrameItems.empty() &&
-                        !s_cacheForwardFrameOnce.load(std::memory_order_acquire)) {
-                        shouldResetCache = true;
-                    }
-                }
-
-                if (shouldResetCache) {
-                    s_cacheForwardFrameOnce.store(true, std::memory_order_release);
-                }
-
-                // This part is for fixing returning to Ultrahand without rendering that first frame skip
-                static bool checkOnce = true;
-                if (checkOnce && m_pendingJump && !s_hasValidFrame.load(std::memory_order_acquire) &&
-                    !s_isForwardCache.load(std::memory_order_acquire)) {
-                    checkOnce = false;
-                    return;
-                } else {
-                    static bool checkOnce2 = true;
-                    if (checkOnce2) {
-                        checkOnce = true;
-                        checkOnce2 = false;
-                    }
-                }
-
-                // Check if we should render cached frame
-                if ((m_pendingJump || !m_hasForwardCached) &&
-                    (s_hasValidFrame.load(std::memory_order_acquire) || s_isForwardCache.load(std::memory_order_acquire))) {
-                    {
-                        std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                        // Render using cached frame state if available
-                        renderCachedFrame(renderer);  // This method handles its own locking
-
-                        // Clear cache after rendering
-                        if (s_isForwardCache.load(std::memory_order_acquire))
-                            clearStaticCacheUnsafe(true);  // This method handles its own locking
-                        else
-                            clearStaticCacheUnsafe();      // This method handles its own locking
-                    }
-
                     return;
                 }
 
-                // Cache bounds for hot loop
+                bool justResolved = false;
+
+                // Process pending operations
+                if (!m_itemsToAdd.empty()) {
+                    // Add items to m_items but DON'T invalidate yet
+                    addPendingItems(true);  // Skip invalidate
+
+                    // Calculate m_listHeight FIRST
+                    m_listHeight = BOTTOM_PADDING;
+                    for (Element* entry : m_items) {
+                        m_listHeight += entry->getHeight();
+                    }
+
+                    // NOW invalidate with m_offset still at 0 to get initial positions
+                    invalidate();
+
+                    // THEN resolve jump AFTER layout has positioned items
+                    if (m_pendingJump && !m_items.empty()) {
+                        resolveJumpImmediately();
+                        justResolved = true;
+                    } else if (!m_hasSetInitialFocusHack && !m_items.empty()) {
+                        // NO JUMP: Set up focus on first item
+                        for (size_t i = 0; i < m_items.size(); ++i) {
+                            if (m_items[i]->m_isItem) {
+                                m_focusedIndex = i;
+                                m_hasSetInitialFocusHack = true;
+
+                                // Calculate position using the same logic as updateScrollOffset
+                                float itemPos = 0.0f;
+                                for (size_t j = 0; j < i && j < m_items.size(); ++j) {
+                                    itemPos += m_items[j]->getHeight();
+                                }
+
+                                const float itemHeight = m_items[i]->getHeight();
+                                const float viewHeight = static_cast<float>(getHeight());
+                                const float maxOffset = (m_listHeight > viewHeight) ?
+                                                       static_cast<float>(m_listHeight - viewHeight) : 0.0f;
+
+                                const float itemCenterPos = itemPos + (itemHeight / 2.0f);
+                                const float viewportCenter = viewHeight / 2.0f + VIEW_CENTER_OFFSET + 0.5f;
+                                const float idealOffset = std::max(0.0f, std::min(itemCenterPos - viewportCenter, maxOffset));
+
+                                m_offset = m_nextOffset = idealOffset;
+
+                                // Now invalidate AGAIN with correct offset
+                                invalidate();
+                                justResolved = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!m_itemsToRemove.empty()) {
+                    removePendingItems();
+                }
+
                 const s32 topBound = getTopBound();
                 const s32 bottomBound = getBottomBound();
                 const s32 height = getHeight();
 
                 renderer->enableScissoring(getLeftBound(), topBound-8, getWidth() + 8, height + 14);
 
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                    // Force focus ONLY if no item has focus yet
-                    if (!m_hasSetInitialFocusHack && !m_items.empty()) {
-                        // Check if ANY item already has focus
-                        bool anyItemFocused = false;
-                        for (Element* item : m_items) {
-                            if (item && item->hasFocus()) {
-                                anyItemFocused = true;
-                                break;
-                            }
-                        }
-
-                        // Only set focus if nothing is focused yet
-                        if (!anyItemFocused) {
-                            for (Element* item : m_items) {
-                                if (item && item->m_isItem) {
-                                    item->setFocused(true);
-                                    m_hasSetInitialFocusHack = true;
-                                    break;
-                                }
-                            }
-                        } else {
-                            // Focus already exists (from handleInput or jump logic), just mark as done
-                            m_hasSetInitialFocusHack = true;
+                // Manually set focus flag on the target item for the first frame
+                if (m_hasSetInitialFocusHack && !m_hasRenderedInitialFocus && !m_items.empty() && m_focusedIndex < m_items.size()) {
+                    bool anyItemFocused = false;
+                    for (Element* item : m_items) {
+                        if (item && item->hasFocus()) {
+                            anyItemFocused = true;
+                            break;
                         }
                     }
 
+                    if (!anyItemFocused) {
+                        m_items[m_focusedIndex]->setFocused(true);
+                    }
+                    m_hasRenderedInitialFocus = true;
+                }
 
-                    // Optimized visibility culling
-                    for (Element* entry : m_items) {
-                        if (entry->getBottomBound() > topBound && entry->getTopBound() < bottomBound) {
-                            entry->frame(renderer);
-                        }
+                for (Element* entry : m_items) {
+                    if (entry->getBottomBound() > topBound && entry->getTopBound() < bottomBound) {
+                        entry->frame(renderer);
                     }
                 }
 
                 renderer->disableScissoring();
 
-                // Draw scrollbar only when needed
                 if (m_listHeight > height) {
                     drawScrollbar(renderer, height);
-                    updateScrollAnimation();
+                    if (!justResolved) {
+                        updateScrollAnimation();
+                    }
                 }
 
-                // Handle caching operations - lock only for the critical section
-                {
-                    std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-
-                    if (!s_isForwardCache.load(std::memory_order_acquire) && s_hasValidFrame.load(std::memory_order_acquire)) {
-                        // Clear cache after rendering (this is called within the lock)
-                        clearStaticCacheUnsafe(); // New unsafe version for use within lock
-                        s_hasValidFrame.store(false, std::memory_order_release);
-                        s_cacheForwardFrameOnce.store(true, std::memory_order_release);
-                    }
-
-                    if (!m_cachingDisabled) {
-                        if (s_cacheForwardFrameOnce.load(std::memory_order_acquire) &&
-                            !s_hasValidFrame.load(std::memory_order_acquire)) {
-                            // Cache current frame (this is called within the lock)
-                            cacheCurrentFrameUnsafe(true); // New unsafe version for use within lock
-                            s_cacheForwardFrameOnce.store(false, std::memory_order_release);
-                            s_isForwardCache.store(true, std::memory_order_release);
-                            s_hasValidFrame.store(true, std::memory_order_release);
-                            m_hasForwardCached = true;
-                        }
-                        cacheCurrentScrollbar();
-                    }
-
-                    //if (m_cachingDisabled ||(s_hasValidFrame.load(std::memory_order_acquire) && s_isForwardCache.load(std::memory_order_acquire)))
-                    //    s_safeToSwap.store(true, std::memory_order_release);
-                }
                 s_safeToSwap.store(true, std::memory_order_release);
+            }
+
+            void resolveJumpImmediately() {
+                float h = 0.0f;
+                bool foundMatch = false;
+
+                for (size_t i = 0; i < m_items.size(); ++i) {
+                    if (m_items[i]->matchesJumpCriteria(m_jumpToText, m_jumpToValue, m_jumpToExactMatch)) {
+                        m_focusedIndex = i;
+                        foundMatch = true;
+
+                        // Calculate position using the same logic as updateScrollOffset
+                        const float itemHeight = m_items[i]->getHeight();
+                        const float viewHeight = static_cast<float>(getHeight());
+                        const float maxOffset = (m_listHeight > viewHeight) ?
+                                               static_cast<float>(m_listHeight - viewHeight) : 0.0f;
+
+                        const float itemCenterPos = h + (itemHeight / 2.0f);
+                        const float viewportCenter = viewHeight / 2.0f + VIEW_CENTER_OFFSET + 0.5f;
+                        const float idealOffset = std::max(0.0f, std::min(itemCenterPos - viewportCenter, maxOffset));
+
+                        m_offset = m_nextOffset = idealOffset;
+
+                        // Now invalidate AGAIN with correct offset so layout repositions items
+                        invalidate();
+
+                        // Manually set the focus flag for first frame drawing
+                        m_items[m_focusedIndex]->setFocused(true);
+
+                        m_hasSetInitialFocusHack = true;
+                        m_hasRenderedInitialFocus = true;
+                        m_pendingJump = false;
+
+                        break;
+                    }
+
+                    h += m_items[i]->getHeight();
+                }
+
+                // FALLBACK: If no match found, focus first item instead
+                if (!foundMatch) {
+                    for (size_t i = 0; i < m_items.size(); ++i) {
+                        if (m_items[i]->m_isItem) {
+                            m_focusedIndex = i;
+                            m_hasSetInitialFocusHack = true;
+
+                            // Calculate position using the same logic as updateScrollOffset
+                            float itemPos = 0.0f;
+                            for (size_t j = 0; j < i && j < m_items.size(); ++j) {
+                                itemPos += m_items[j]->getHeight();
+                            }
+
+                            const float itemHeight = m_items[i]->getHeight();
+                            const float viewHeight = static_cast<float>(getHeight());
+                            const float maxOffset = (m_listHeight > viewHeight) ?
+                                                   static_cast<float>(m_listHeight - viewHeight) : 0.0f;
+
+                            const float itemCenterPos = itemPos + (itemHeight / 2.0f);
+                            const float viewportCenter = viewHeight / 2.0f + VIEW_CENTER_OFFSET + 0.5f;
+                            const float idealOffset = std::max(0.0f, std::min(itemCenterPos - viewportCenter, maxOffset));
+
+                            m_offset = m_nextOffset = idealOffset;
+
+                            // Now invalidate AGAIN with correct offset
+                            invalidate();
+
+                            // Manually set the focus flag for first frame drawing
+                            m_items[i]->setFocused(true);
+
+                            m_hasRenderedInitialFocus = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                m_pendingJump = false;
             }
 
 
@@ -6250,16 +6158,13 @@ namespace tsl {
             virtual Element* requestFocus(Element* oldFocus, FocusDirection direction) override {
                 if (m_clearList || !m_itemsToAdd.empty()) return nullptr;
 
-                static bool delayedHandle = false;
-
-                // NEW: Handle pending jump to specific item
-                if (m_pendingJump && !delayedHandle) {
-                    delayedHandle = true;
-                    return handleJumpToItem(oldFocus);
-                } else if (m_pendingJump) {
-                    m_pendingJump = false;
-                    delayedHandle = false;
-                    return handleJumpToItem(oldFocus); // needs to be handled 2x for proper rendering
+                // If jump was just resolved, return the target item with proper focus
+                if (m_hasSetInitialFocusHack && direction == FocusDirection::None && m_focusedIndex < m_items.size()) {
+                    // Request focus properly through the focus system
+                    Element* newFocus = m_items[m_focusedIndex]->requestFocus(oldFocus, FocusDirection::None);
+                    if (newFocus && newFocus != oldFocus) {
+                        return newFocus;
+                    }
                 }
 
                 if (jumpToBottom.exchange(false, std::memory_order_acq_rel))
@@ -6273,7 +6178,6 @@ namespace tsl {
 
                 if (skipUp.exchange(false, std::memory_order_acq_rel))
                     return handleSkipUp(oldFocus);
-
 
                 if (direction == FocusDirection::None) {
                     return handleInitialFocus(oldFocus);
@@ -6324,18 +6228,19 @@ namespace tsl {
                 m_lastNavigationResult = NavigationResult::None;
                 m_isHolding = false;
                 m_stoppedAtBoundary = false;
+                m_justArrivedAtBoundary = false;
                 m_lastNavigationTime = 0;
                 m_lastScrollTime = 0;
             }
 
             inline void disableCaching(bool preserveTopAndBottom = false) {
-                m_cachingDisabled = true;
+                //m_cachingDisabled = true;
                 //clearFrameCache();
-                g_disableMenuCacheOnReturn.store(true, std::memory_order_release);
-                if (!preserveTopAndBottom) {
-                    g_cachedTop.disabled = true;
-                    g_cachedBottom.disabled = true;
-                }
+                //g_disableMenuCacheOnReturn.store(true, std::memory_order_release);
+                //if (!preserveTopAndBottom) {
+                //    g_cachedTop.disabled = true;
+                //    g_cachedBottom.disabled = true;
+                //}
             }
 
         protected:
@@ -6368,9 +6273,12 @@ namespace tsl {
             std::string m_jumpToValue;
             bool m_jumpToExactMatch = false;
             bool m_pendingJump = false;
-            bool m_hasForwardCached = false;
-            bool m_cachingDisabled = false;  // New flag to disable caching
+            //bool m_hasForwardCached = false;
+            //bool m_cachingDisabled = false;  // New flag to disable caching
+
+            bool m_justArrivedAtBoundary = false;
             bool m_hasSetInitialFocusHack = false;
+            bool m_hasRenderedInitialFocus = false;
 
             //bool m_hasRenderedCache = false;
 
@@ -6407,126 +6315,6 @@ namespace tsl {
 
         private:
 
-            // Thread-safe versions (handle their own locking)
-            static void clearStaticCache(bool preservePointers = false) {
-                std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                clearStaticCacheUnsafe(preservePointers);
-            }
-
-            void cacheCurrentFrame(bool preservePointers = false) {
-                std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                cacheCurrentFrameUnsafe(preservePointers);
-            }
-
-
-            static void clearStaticCacheUnsafe(bool preservePointers = false) {
-                //std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                if (!preservePointers) {
-                    // Normal case: delete elements and clear
-                    for (Element* el : s_lastFrameItems) {
-                        delete el;
-                    }
-                }
-
-                s_lastFrameItems.clear();
-                //s_lastFrameItems.shrink_to_fit();
-
-                // CRITICAL: Always reset these, even for forward cache!
-                s_hasValidFrame.store(false, std::memory_order_release);  // This MUST be false after clearing
-                s_isForwardCache.store(false, std::memory_order_release);
-
-                s_cachedTopBound.store(0, std::memory_order_release);
-                s_cachedBottomBound.store(0, std::memory_order_release);
-                s_cachedHeight.store(0, std::memory_order_release);
-                s_cachedListHeight.store(0, std::memory_order_release);
-                s_cachedActualContentBottom.store(0, std::memory_order_release);
-
-                s_shouldDrawScrollbar.store(false, std::memory_order_release);
-                s_cachedScrollbarHeight.store(0, std::memory_order_release);
-                s_cachedScrollbarOffset.store(0, std::memory_order_release);
-                s_cachedScrollbarX.store(0, std::memory_order_release);
-                s_cachedScrollbarY.store(0, std::memory_order_release);
-            }
-
-            void cacheCurrentFrameUnsafe(bool preservePointers = false) {
-                //std::lock_guard<std::mutex> lock(s_lastFrameItemsMutex);
-                if (!preservePointers) {
-                    for (Element* el : s_lastFrameItems) delete el;
-                }
-
-                s_lastFrameItems = m_items;
-
-                // Store new cache values using atomic stores
-                s_cachedTopBound.store(getTopBound(), std::memory_order_release);
-                s_cachedBottomBound.store(getBottomBound(), std::memory_order_release);
-                s_cachedHeight.store(getHeight(), std::memory_order_release);
-                s_cachedListHeight.store(m_listHeight, std::memory_order_release);
-
-                if (preservePointers)
-                    s_isForwardCache.store(true, std::memory_order_release);
-
-                s_hasValidFrame.store(true, std::memory_order_release);
-            }
-
-            void cacheCurrentScrollbar() {
-                const s32 cachedHeight = s_cachedHeight.load(std::memory_order_acquire);
-                const s32 cachedListHeight = s_cachedListHeight.load(std::memory_order_acquire);
-
-                s_shouldDrawScrollbar.store((cachedListHeight > cachedHeight), std::memory_order_release);
-
-                if (s_shouldDrawScrollbar.load(std::memory_order_acquire)) {
-                    const float viewHeight  = static_cast<float>(cachedHeight);
-                    const float totalHeight = static_cast<float>(cachedListHeight);
-                    const u32   maxScroll   = std::max(static_cast<u32>(totalHeight - viewHeight), 1u);
-
-                    u32 scrollbarHeight = std::min(
-                        static_cast<u32>((viewHeight * viewHeight) / totalHeight),
-                        static_cast<u32>(viewHeight)
-                    );
-
-                    u32 scrollbarOffset = std::min(
-                        static_cast<u32>((m_offset / maxScroll) * (viewHeight - scrollbarHeight)),
-                        static_cast<u32>(viewHeight - scrollbarHeight) // corrected potential bug
-                    );
-
-                    scrollbarHeight -= SCROLLBAR_HEIGHT_TRIM;
-
-                    s_cachedScrollbarHeight.store(scrollbarHeight, std::memory_order_release);
-                    s_cachedScrollbarOffset.store(scrollbarOffset, std::memory_order_release);
-                    s_cachedScrollbarX.store(getRightBound() + SCROLLBAR_X_OFFSET, std::memory_order_release);
-                    s_cachedScrollbarY.store(getY() + scrollbarOffset + SCROLLBAR_Y_OFFSET, std::memory_order_release);
-                }
-            }
-
-            void renderCachedFrame(gfx::Renderer* renderer) {
-                const s32 cachedTopBound    = s_cachedTopBound.load(std::memory_order_acquire);
-                const s32 cachedBottomBound = s_cachedBottomBound.load(std::memory_order_acquire);
-                const s32 cachedHeight      = s_cachedHeight.load(std::memory_order_acquire);
-
-                renderer->enableScissoring(getLeftBound(), cachedTopBound - 8, getWidth() + 8, cachedHeight + 14);
-
-                for (Element* entry : s_lastFrameItems) {
-                    if (entry &&
-                        entry->getBottomBound() > cachedTopBound &&
-                        entry->getTopBound() < cachedBottomBound) {
-                        entry->frame(renderer);
-                    }
-                }
-
-                renderer->disableScissoring();
-
-                if (s_shouldDrawScrollbar.load(std::memory_order_acquire)) {
-                    const u32 scrollbarX      = s_cachedScrollbarX.load(std::memory_order_acquire);
-                    const u32 scrollbarY      = s_cachedScrollbarY.load(std::memory_order_acquire);
-                    const u32 scrollbarHeight = s_cachedScrollbarHeight.load(std::memory_order_acquire);
-
-                    renderer->drawRect(scrollbarX, scrollbarY, 5, scrollbarHeight, a(trackBarColor));
-                    renderer->drawCircle(scrollbarX + 2, scrollbarY, 2, true, a(trackBarColor));
-                    renderer->drawCircle(scrollbarX + 2, scrollbarY + scrollbarHeight, 2, true, a(trackBarColor));
-                }
-            }
-
-
             void clearItems() {
 
                 for (Element* item : m_items) delete item;
@@ -6541,7 +6329,7 @@ namespace tsl {
                 m_hasSetInitialFocusHack = false;
             }
 
-            void addPendingItems() {
+            void addPendingItems(bool skipInvalidate = false) {
                 for (auto [index, element] : m_itemsToAdd) {
                     element->invalidate();
                     if (index >= 0 && static_cast<size_t>(index) < m_items.size()) {
@@ -6550,11 +6338,12 @@ namespace tsl {
                         m_items.push_back(element);
                     }
                 }
-                m_itemsToAdd = {};
-                //m_itemsToAdd.clear();
-                //m_itemsToAdd.shrink_to_fit();
-                invalidate();
-                updateScrollOffset();
+                m_itemsToAdd.clear();
+
+                if (!skipInvalidate) {
+                    invalidate();
+                    updateScrollOffset();
+                }
             }
 
             void removePendingItems() {
@@ -6768,6 +6557,7 @@ namespace tsl {
                 }
             }
 
+
             Element* handleInitialFocus(Element* oldFocus) {
                 const size_t itemCount = m_items.size();
                 if (itemCount == 0) return nullptr;
@@ -6808,18 +6598,36 @@ namespace tsl {
                 return nullptr;
             }
 
+            inline void triggerWallEffect(FocusDirection direction) {
+                triggerRumbleClick.store(true, std::memory_order_release);
+                triggerWallSound.store(true, std::memory_order_release);
+
+                if (m_items.empty())
+                    return;
+
+                // Directional search bounds
+                ssize_t i  = static_cast<ssize_t>(m_focusedIndex);
+                ssize_t end = (direction == FocusDirection::Down) ? -1 : static_cast<ssize_t>(m_items.size());
+                ssize_t step = (direction == FocusDirection::Down) ? -1 : 1;
+
+                // Walk until we hit a real item
+                for (; i != end; i += step) {
+                    auto *it = m_items[i];
+                    if (it->m_isItem) {
+                        it->shakeHighlight(direction);
+                        return;
+                    }
+                }
+            }
 
             inline Element* handleDownFocus(Element* oldFocus) {
-                static bool triggerShakeOnce = true;
                 const bool atBottom = isAtBottom();
                 updateHoldState();
 
-                // Check if the next item is non-focusable BEFORE we do anything else
-                if (m_focusedIndex + 1 < int(m_items.size())) {
-                    Element* nextItem = m_items[m_focusedIndex + 1];
-                    if (!nextItem->m_isItem) {
-                        isTableScrolling.store(true, std::memory_order_release);
-                    }
+                // Check if the next item is non-focusable
+                if (m_focusedIndex + 1 < static_cast<int>(m_items.size()) &&
+                    !m_items[m_focusedIndex + 1]->m_isItem) {
+                    isTableScrolling.store(true, std::memory_order_release);
                 }
 
                 // If holding and at boundary, try to scroll first
@@ -6834,9 +6642,8 @@ namespace tsl {
                 if (result != oldFocus) {
                     m_lastNavigationResult = NavigationResult::Success;
                     m_stoppedAtBoundary = false;
-                    triggerShakeOnce = true;  // This resets it for THIS function
-                    //triggerRumbleClick.store(true, std::memory_order_release);
-                    //triggerNavigationSound.store(true, std::memory_order_release);
+                    s_triggerShakeOnce = true;
+                    m_justArrivedAtBoundary = isAtBottom();
                     triggerNavigationFeedback();
                     return result;
                 }
@@ -6844,63 +6651,51 @@ namespace tsl {
                 // Check if we can still scroll down
                 if (!atBottom) {
                     scrollDown();
-                    triggerShakeOnce = true;  // ADDED: Reset when scrolling away from boundary
+                    s_triggerShakeOnce = true;
                     return oldFocus;
                 }
 
-                // At absolute bottom - check for wrapping (single tap)
-                if (!m_isHolding && !m_hasWrappedInCurrentSequence && atBottom) {
+                // Force boundary hit before allowing wrap
+                if (m_justArrivedAtBoundary) {
+                    m_justArrivedAtBoundary = false;
+                    m_stoppedAtBoundary = true;
+                    s_triggerShakeOnce = false;
+                    m_lastNavigationResult = NavigationResult::HitBoundary;
+                    triggerWallEffect(FocusDirection::Down);
+                    return oldFocus;
+                }
+
+                // Check for wrapping (single tap only)
+                if (!m_isHolding && !m_hasWrappedInCurrentSequence) {
                     s_directionalKeyReleased.store(false, std::memory_order_release);
                     m_hasWrappedInCurrentSequence = true;
                     m_lastNavigationResult = NavigationResult::Wrapped;
-
-                    //if (result->m_isItem) {
-                    triggerShakeOnce = true;  // Reset when wrapping
-                    //triggerRumbleClick.store(true, std::memory_order_release);
-                    //triggerNavigationSound.store(true, std::memory_order_release);
-                    //}
+                    s_triggerShakeOnce = true;
                     return handleJumpToTop(oldFocus);
                 }
 
                 // Set boundary flag (for holding)
-                if (m_isHolding && atBottom) {
+                m_lastNavigationResult = NavigationResult::HitBoundary;
+                if (m_isHolding) {
                     m_stoppedAtBoundary = true;
-                    if (triggerShakeOnce) {
-                        if (result->m_isItem) {
-                            triggerRumbleClick.store(true, std::memory_order_release);
-                            triggerWallSound.store(true, std::memory_order_release);
-
-                            for (ssize_t i = static_cast<ssize_t>(m_focusedIndex); i >= 0; --i) {
-                                if (m_items[i]->m_isItem) {
-                                    m_items[i]->shakeHighlight(FocusDirection::Down);
-                                    break;
-                                }
-                            }
-                        } else {
-                            triggerRumbleClick.store(true, std::memory_order_release);
-                            triggerWallSound.store(true, std::memory_order_release);
-                        }
-                        triggerShakeOnce = false;
+                    if (s_triggerShakeOnce) {
+                        s_triggerShakeOnce = false;
+                        triggerWallEffect(FocusDirection::Down);
                     }
-                } else if (!m_isHolding) {
-                    triggerShakeOnce = true;
+                } else {
+                    s_triggerShakeOnce = true;
                 }
 
-                m_lastNavigationResult = NavigationResult::HitBoundary;
                 return oldFocus;
             }
 
             inline Element* handleUpFocus(Element* oldFocus) {
-                static bool triggerShakeOnce = true;
                 const bool atTop = isAtTop();
                 updateHoldState();
 
-                // Check if the previous item is non-focusable BEFORE we do anything else
-                if (m_focusedIndex > 0) {
-                    Element* prevItem = m_items[m_focusedIndex - 1];
-                    if (prevItem->isTable()) {
-                        isTableScrolling.store(true, std::memory_order_release);
-                    }
+                // Check if the previous item is non-focusable
+                if (m_focusedIndex > 0 && m_items[m_focusedIndex - 1]->isTable()) {
+                    isTableScrolling.store(true, std::memory_order_release);
                 }
 
                 // If holding and at boundary, try to scroll first
@@ -6915,9 +6710,8 @@ namespace tsl {
                 if (result != oldFocus) {
                     m_lastNavigationResult = NavigationResult::Success;
                     m_stoppedAtBoundary = false;
-                    triggerShakeOnce = true;  // This resets it for THIS function
-                    //triggerRumbleClick.store(true, std::memory_order_release);
-                    //triggerNavigationSound.store(true, std::memory_order_release);
+                    s_triggerShakeOnce = true;
+                    m_justArrivedAtBoundary = isAtTop();
                     triggerNavigationFeedback();
                     return result;
                 }
@@ -6925,49 +6719,41 @@ namespace tsl {
                 // Check if we can still scroll up
                 if (!atTop) {
                     scrollUp();
-                    triggerShakeOnce = true;  // ADDED: Reset when scrolling away from boundary
+                    s_triggerShakeOnce = true;
                     return oldFocus;
                 }
 
-                // At absolute top - check for wrapping (single tap)
-                if (!m_isHolding && !m_hasWrappedInCurrentSequence && atTop) {
+                // Force boundary hit before allowing wrap
+                if (m_justArrivedAtBoundary) {
+                    m_justArrivedAtBoundary = false;
+                    m_stoppedAtBoundary = true;
+                    s_triggerShakeOnce = false;
+                    m_lastNavigationResult = NavigationResult::HitBoundary;
+                    triggerWallEffect(FocusDirection::Up);
+                    return oldFocus;
+                }
+
+                // Check for wrapping (single tap only)
+                if (!m_isHolding && !m_hasWrappedInCurrentSequence) {
                     s_directionalKeyReleased.store(false, std::memory_order_release);
                     m_hasWrappedInCurrentSequence = true;
                     m_lastNavigationResult = NavigationResult::Wrapped;
-
-                    //if (result->m_isItem) {
-                    triggerShakeOnce = true;  // Reset when wrapping
-                    //triggerRumbleClick.store(true, std::memory_order_release);
-                    //triggerNavigationSound.store(true, std::memory_order_release);
-                    //}
+                    s_triggerShakeOnce = true;
                     return handleJumpToBottom(oldFocus);
                 }
 
                 // Set boundary flag (for holding)
-                if (m_isHolding && atTop) {
+                m_lastNavigationResult = NavigationResult::HitBoundary;
+                if (m_isHolding) {
                     m_stoppedAtBoundary = true;
-                    if (triggerShakeOnce) {
-                        if (result->m_isItem) {
-                            triggerRumbleClick.store(true, std::memory_order_release);
-                            triggerWallSound.store(true, std::memory_order_release);
-
-                            for (size_t i = m_focusedIndex; i < m_items.size(); ++i) {
-                                if (m_items[i]->m_isItem) {
-                                    m_items[i]->shakeHighlight(FocusDirection::Up);
-                                    break;
-                                }
-                            }
-                        } else {
-                            triggerRumbleClick.store(true, std::memory_order_release);
-                            triggerWallSound.store(true, std::memory_order_release);
-                        }
-                        triggerShakeOnce = false;
+                    if (s_triggerShakeOnce) {
+                        s_triggerShakeOnce = false;
+                        triggerWallEffect(FocusDirection::Up);
                     }
-                } else if (!m_isHolding) {
-                    triggerShakeOnce = true;
+                } else {
+                    s_triggerShakeOnce = true;
                 }
 
-                m_lastNavigationResult = NavigationResult::HitBoundary;
                 return oldFocus;
             }
 
@@ -7046,6 +6832,7 @@ namespace tsl {
                 m_lastNavigationResult = NavigationResult::None;
                 m_isHolding = false;
                 m_stoppedAtBoundary = false;
+                m_justArrivedAtBoundary = false;
                 m_lastNavigationTime = 0;
             }
 
@@ -11619,8 +11406,15 @@ namespace tsl {
             }
         #endif
 
+
         #if IS_STATUS_MONITOR_DIRECTIVE
             if (FullMode && !deactivateOriginalFooter) {
+                if ((keysDown & ALL_KEYS_MASK) && ult::stillTouching && ult::currentForeground.load(std::memory_order_acquire)) {
+                    triggerRumbleClick.store(true, std::memory_order_release);
+                    triggerWallSound.store(true, std::memory_order_release);
+                    return;
+                }
+
                 if (ult::simulatedSelect.exchange(false, std::memory_order_acq_rel))
                     keysDown |= KEY_A;
 
@@ -11646,11 +11440,18 @@ namespace tsl {
                 ult::simulatedBack.exchange(false, std::memory_order_acq_rel);
             }
         #else
+
             if (ult::simulatedSelect.exchange(false, std::memory_order_acq_rel))
                 keysDown |= KEY_A;
 
             if (ult::simulatedBack.exchange(false, std::memory_order_acq_rel))
                 keysDown |= KEY_B;
+
+            if ((keysDown & ALL_KEYS_MASK) && ult::stillTouching && ult::currentForeground.load(std::memory_order_acquire)) {
+                triggerRumbleClick.store(true, std::memory_order_release);
+                triggerWallSound.store(true, std::memory_order_release);
+                return;
+            }
 
             if (!overrideBackButton) {
                 if (keysDown & KEY_B && !(keysHeld & ~KEY_B & ALL_KEYS_MASK)) {
@@ -11666,13 +11467,17 @@ namespace tsl {
                     return;
                 }
             } else {
+                #if IS_LAUNCHER_DIRECTIVE
                 if (keysDown & KEY_B && !(keysHeld & ~KEY_B & ALL_KEYS_MASK)) {
                     if (this->m_guiStack.size() >= 1 && !interpreterIsRunning) {
                         //triggerRumbleDoubleClick.store(true, std::memory_order_release);
                         //triggerExitSound.store(true, std::memory_order_release);
+
                         triggerExitFeedback();
+
                     }
                 }
+                #endif
             }
         #endif
 
@@ -12404,12 +12209,12 @@ namespace tsl {
             const u32 actualCount = std::min(count, static_cast<u32>(this->m_guiStack.size()));
 
             if (actualCount > 1) {
-                tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
+                //tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
                 // Pop the specified number of GUIs
                 for (u32 i = 0; i < actualCount; ++i) {
                     this->m_guiStack.pop();
                 }
-                tsl::elm::skipDeconstruction.store(false, std::memory_order_release);
+                //tsl::elm::skipDeconstruction.store(false, std::memory_order_release);
             } else {
                 this->m_guiStack.pop();
             }
@@ -12459,7 +12264,13 @@ namespace tsl {
          * @note The Overlay gets closed once there are no more Guis on the stack
          */
         void goBack(u32 count = 1) {
-            tsl::elm::g_disableMenuCacheOnReturn.store(true, std::memory_order_release);
+            if (ult::stillTouching && ult::currentForeground.load(std::memory_order_acquire)) {
+                triggerRumbleClick.store(true, std::memory_order_release);
+                triggerWallSound.store(true, std::memory_order_release);
+                return;
+            }
+
+            //tsl::elm::g_disableMenuCacheOnReturn.store(true, std::memory_order_release);
 
             // If there is exactly one GUI and an active notification, handle that first
             if (this->m_guiStack.size() == 1 && notification && notification->isActive()) {
@@ -12478,15 +12289,15 @@ namespace tsl {
                 return;
             }
 
-            if (actualCount > 1)
-                tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
+            //if (actualCount > 1)
+            //    tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
 
             // Pop the specified number of GUIs
             for (u32 i = 0; i < actualCount && !this->m_guiStack.empty(); ++i) {
                 this->m_guiStack.pop();
             }
 
-            tsl::elm::skipDeconstruction.exchange(false, std::memory_order_acq_rel);
+            //tsl::elm::skipDeconstruction.exchange(false, std::memory_order_acq_rel);
 
             // Close overlay if stack is empty
             if (this->m_guiStack.empty()) {
@@ -12499,18 +12310,25 @@ namespace tsl {
         }
 
         void pop(u32 count = 1) {
+
+            if (ult::stillTouching && ult::currentForeground.load(std::memory_order_acquire)) {
+                triggerRumbleClick.store(true, std::memory_order_release);
+                triggerWallSound.store(true, std::memory_order_release);
+                return;
+            }
+
             isNavigatingBackwards.store(true, std::memory_order_release);
 
             // Clamp count to available stack size to prevent underflow
             const u32 actualCount = std::min(count, static_cast<u32>(this->m_guiStack.size()));
 
             if (actualCount > 1) {
-                tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
+                //tsl::elm::skipDeconstruction.store(true, std::memory_order_release);
                 // Pop the specified number of GUIs
                 for (u32 i = 0; i < actualCount; ++i) {
                     this->m_guiStack.pop();
                 }
-                tsl::elm::skipDeconstruction.store(false, std::memory_order_release);
+                //tsl::elm::skipDeconstruction.store(false, std::memory_order_release);
             } else {
                 this->m_guiStack.pop();
             }
@@ -13838,20 +13656,9 @@ namespace tsl {
 
         eventCreate(&shData.comboEvent, false);
 
-        auto& overlay = tsl::Overlay::s_overlayInstance;
-        overlay = new TOverlay();
-        overlay->m_closeOnExit = (u8(launchFlags) & u8(impl::LaunchFlags::CloseOnExit)) == u8(impl::LaunchFlags::CloseOnExit);
-
-        tsl::hlp::doWithSmSession([&overlay]{
-            overlay->initServices();
-        });
-
     #if !IS_LAUNCHER_DIRECTIVE
         tsl::initializeUltrahandSettings();
     #endif
-
-        overlay->initScreen();
-        overlay->changeTo(overlay->loadInitialGui());
 
 
         bool shouldFireEvent = false;
@@ -13889,6 +13696,8 @@ namespace tsl {
             // Fire event if needed
             if (shouldFireEvent) {
                 eventFire(&shData.comboEvent);
+            } else {
+                lastOverlayFilename = "";
             }
         }
     #else
@@ -13915,6 +13724,17 @@ namespace tsl {
             shouldFireEvent = true;
         }
     #endif
+
+        auto& overlay = tsl::Overlay::s_overlayInstance;
+        overlay = new TOverlay();
+        overlay->m_closeOnExit = (u8(launchFlags) & u8(impl::LaunchFlags::CloseOnExit)) == u8(impl::LaunchFlags::CloseOnExit);
+
+        tsl::hlp::doWithSmSession([&overlay]{
+            overlay->initServices();
+        });
+
+        overlay->initScreen();
+        overlay->changeTo(overlay->loadInitialGui());
 
         overlay->disableNextAnimation();
 
@@ -14138,7 +13958,7 @@ namespace tsl {
 
 
             // Cleanup overlay resources
-            tsl::elm::fullDeconstruction.store(true, std::memory_order_release);
+            //tsl::elm::fullDeconstruction.store(true, std::memory_order_release);
             hlp::requestForeground(false);
             overlay->exitScreen();
             overlay->exitServices();
